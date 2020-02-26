@@ -1,69 +1,65 @@
 <template>
-    <div class="container mt-3 mt-sm-5">
-      <div class="row justify-content-center">
-        <h3>Please provide documents</h3>
-        <b-form-file
-          v-model="file"
-          :state="Boolean(file)"
-          placeholder="Choose a file or drop it here..."
-          drop-placeholder="Drop file here..."
-        ></b-form-file>
-  </div>
-      <div v-if="!image">
-        <h3>Select an image</h3>
-        <input type="file" @change="onFileChange">
-      </div>
-      <div v-else>
-        <img :src="image" />
-        <b-btn @click="removeImage">Remove image</b-btn>
-      </div>
-      <b-form-checkbox
-        id="checkbox-1"
-        v-model="status"
-        name="checkbox-1"
-        value="Accepted"
-        unchecked-value="Not Accepted"
-      >
-        I accept the terms and use
-      </b-form-checkbox>
-
-      <div>Status: <strong>{{ status }}</strong></div>
+  <div>
+    <div id="app1">
+      <h2>Please Provide Documents </h2>
+      <p>Upload an image to containing Identification:</p>
+      <input type="file" @change="previewImage" accept="image/*" >
     </div>
+    <div>
+      <p>Progress: {{uploadValue.toFixed()+"%"}}
+        <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
+    </div>
+    <div v-if="imageData!=null">
+      <img class="preview" :src="picture">
+      <br>
+      <button @click="onUpload">Upload</button>
+    </div>
+  </div>
 </template>
 
 <script>
+
+import firebase from 'firebase'
+
 export default {
   name: 'BusinessDetails',
-  data: function () {
+  data () {
     return {
-      status: 'Not Accepted',
-      image: ''
+      imageData: null,
+      picture: null,
+      uploadValue: 0
     }
   },
   methods: {
-    onFileChange (e) {
-      var files = e.target.files || e.dataTransfer.files
-      if (!files.length) { return }
-      this.createImage(files[0])
+    previewImage (event) {
+      this.uploadValue = 0
+      this.picture = null
+      this.imageData = event.target.files[0]
     },
-    createImage (file) {
-      // eslint-disable-next-line no-unused-vars
-      var image = new Image()
-      var reader = new FileReader()
-      var vm = this
 
-      reader.onload = (e) => {
-        vm.image = e.target.result
+    onUpload () {
+      this.picture = null
+      const storageRef = firebase.storage().ref(`${this.imageData.name}`).put(this.imageData)
+      storageRef.on(`state_changed`, snapshot => {
+        this.uploadValue = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      }, error => { console.log(error.message) },
+      () => {
+        this.uploadValue = 100
+        storageRef.snapshot.ref.getDownloadURL().then((url) => {
+          this.picture = url
+        })
       }
-      reader.readAsDataURL(file)
-    },
-    removeImage: function (e) {
-      this.image = ''
+      )
     }
+
   }
 }
 </script>
 
 <style scoped>
+  #app {
+    width: 95%;
+    margin: 0 auto;
+  }
 
 </style>

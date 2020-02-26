@@ -187,8 +187,9 @@ export default {
 
   .error {
     border-color: red;
-    background: red;
+    background: #ff8d1e;
     color: whitesmoke;
+    border-radius: 20px;
   }
 
   .error:focus {

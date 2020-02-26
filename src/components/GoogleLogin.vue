@@ -2,7 +2,7 @@
   <div>
     <!-- The surrounding HTML is left untouched by FirebaseUI.
        Your app may use that space for branding, controls and other customizations.-->
-    <h1>Welcome to My Awesome App</h1>
+    <h1>Login</h1>
     <div id="firebaseui-auth-container"></div>
   </div>
 </template>
@@ -32,5 +32,20 @@ export default {
 </script>
 
 <style scoped>
-
+  .firebaseui-container {
+    background-color: #fff;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.87);
+    direction: ltr;
+    font: 16px Roboto, arial, sans-serif;
+    margin: 0 auto;
+    max-width: 360px;
+    /** This is needed for the invisible reCAPTCHA badge to show. */
+    overflow: visible;
+    position: relative;
+    text-align: left;
+    width: 100%;
+  }
 </style>
