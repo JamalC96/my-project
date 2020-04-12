@@ -2,18 +2,23 @@
   <div id="app">
     <b-navbar toggleable="md" variant="dark" type="dark">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-navbar-brand to="/">BQuick</b-navbar-brand>
+      <b-navbar-brand href="/">
+      <img src="./assets/logo2.png" to="/" class="img-circle" height="80" width="250">
+      </b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav>
-          <b-nav-item to="/bookings"><i class="fa fa-list" style="padding: 5px"> Manage Bookings</i></b-nav-item>
+          <b-nav-item v-show="user" to="/bookings"><i class="fa fa-list" style="padding: 5px"> Manage Bookings</i></b-nav-item>
           <b-nav-item v-show="user" to="/addbooking"><i class="fa fa-bookmark" style="padding: 5px"> Make a booking</i></b-nav-item>
+          <b-nav-item to="/GoogleMap"><i class="fa fa-globe" style="padding: 5px"> Map</i></b-nav-item>
+          <b-nav-item to="/bprofile"><i class="fa fa-globe" style="padding: 5px"> profile</i></b-nav-item>
 
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-          <b-nav-item to="/register"><i class="fa fa-id-card" aria-hidden="true" style="padding: 5px"> For Business</i></b-nav-item>
+          <b-nav-item v-if="currentOrganisation"><a> Welcome {{currentOrganisation.orgname}}</a></b-nav-item>
+          <b-nav-item to="/blogin"><i class="fa fa-id-card" aria-hidden="true" style="padding: 5px"> Business Login</i></b-nav-item>
           <b-nav-item v-if="photo"><img :src="photo" style="width: 35px; height: 35px" class="photo" /></b-nav-item>
-          <b-nav-item to="/login" v-else><i class="fa fa-user-circle-o" style="padding: 5px"> Login </i></b-nav-item>
-          <b-nav-item v-show="user" ><i class="fa fa-sign-out" style="padding: 5px"  @click="logout()"> Logout </i></b-nav-item>
+          <b-nav-item to="/login" v-else><i class="fa fa-user-circle-o" style="padding: 5px"> User Login </i></b-nav-item>
+          <b-nav-item v-show="user" ><i class="fa fa-sign-out" style="padding: 5px"  @click="signOut"> Logout </i></b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -24,9 +29,13 @@
 
 <script>
 import firebase from 'firebase'
+import GoogleMap from './components/GoogleMap'
 
 export default {
   name: 'App',
+  components: {
+    GoogleMap
+  },
   data () {
     return {
       username: '',
@@ -47,14 +56,15 @@ export default {
   },
   methods:
     {
-      logout (e) {
-        e.stopPropagation()
-        firebase.auth().signOut()
-          .then(() => {
-            this.$router.replace({
-              name: 'Booking'
-            })
-          })
+      signOut () {
+        firebase.auth().signOut().then(this.onSignOut, this.onError)
+        this.$store.dispatch('setToken', null)
+        this.$store.dispatch('setOwner', null)
+        window.location.reload()
+        this.$router.push('/')
+      },
+      currentOrganisation () {
+        return this.$store.state.isOrganisationLoggedIn
       }
     }
 }

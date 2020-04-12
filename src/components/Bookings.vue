@@ -2,6 +2,7 @@
   <div id="app1">
     <v-client-table :columns="columns" :data="bookings" :options="options">
       <a slot="remove" v-if="user" slot-scope="props" class="fa fa-trash-o fa-2x" @click="deleteBooking(props.row._id)"></a>
+      <b-button slot="activity" id="hide-seen" v-on:click="toggleSeen">Pending</b-button>
     </v-client-table>
   </div>
 </template>
@@ -22,7 +23,7 @@ export default {
       bookings: [],
       props: ['_id'],
       errors: [],
-      columns: ['_id', 'name', 'service', 'organisation', 'types', 'day', 'times', 'review', 'remove'],
+      columns: ['_id', 'name', 'service', 'organisation', 'types', 'day', 'times', 'review', 'remove', 'activity'],
       options: {
         perPage: 10,
         filterable: ['service', 'organisation'],
@@ -34,7 +35,8 @@ export default {
           types: 'Service',
           day: 'Day',
           times: 'Time',
-          review: 'Review'
+          review: 'Review',
+          job: 'Pending'
         }
       }
     }
@@ -64,6 +66,9 @@ export default {
           this.errors.push(error)
           console.log(error)
         })
+    },
+    toggleSeen: function () {
+      this.job = 'Accepted'
     },
     deleteBooking: function (id) {
       this.$swal({

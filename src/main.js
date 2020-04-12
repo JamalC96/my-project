@@ -9,27 +9,23 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueNoty from 'vuejs-noty'
 import 'vuejs-noty/dist/vuejs-noty.css'
 import * as firebase from 'firebase'
+import store from './store/store'
+import {sync} from 'vuex-router-sync'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(VueNoty)
 
 Vue.use(firebase)
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyCV-WT-dMnQV0cxRBt1ndBpkoVxRRH2k0k',
+    libraries: 'places' // necessary for places input
+  }
+})
 
-// Your web app's Firebase configuration
-var firebaseConfig = {
-  apiKey: 'AIzaSyA78DFw3k_scPYst4kZPi8YdNMQQ3cfbdo',
-  authDomain: 'bquickfa.firebaseapp.com',
-  databaseURL: 'https://bquickfa.firebaseio.com',
-  projectId: 'bquickfa',
-  storageBucket: 'bquickfa.appspot.com',
-  messagingSenderId: '67911642935',
-  appId: '1:67911642935:web:aff83453b9c91a0162f4b2',
-  measurementId: 'G-NJ16RFMD21'
-}
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig)
-firebase.analytics()
+sync(store, router)
 
 /* eslint-disable no-new */
 new Vue({

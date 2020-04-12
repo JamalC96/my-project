@@ -6,6 +6,10 @@ import Book from '../components/Book'
 import GoogleLogin from '../components/GoogleLogin'
 import Register from '../components/Register'
 import BusinessDetails from '../components/BusinessDetails'
+import BLogin from '../components/BLogin'
+import BRegister from '../components/BRegister'
+import GoogleMap from '../components/GoogleMap'
+import BProfile from '../components/BProfile'
 
 Vue.use(Router)
 
@@ -40,6 +44,26 @@ export default new Router({
       path: '/bdetails',
       name: 'BusinessDetails',
       component: BusinessDetails
+    },
+    {
+      path: '/blogin',
+      name: 'BLogin',
+      component: BLogin
+    },
+    {
+      path: '/bregister',
+      name: 'BRegister',
+      component: BRegister
+    },
+    {
+      path: '/GoogleMap',
+      name: 'GoogleMap',
+      component: GoogleMap
+    },
+    {
+      path: '/bprofile',
+      name: 'BProfile',
+      component: BProfile
     }
 
   ]
